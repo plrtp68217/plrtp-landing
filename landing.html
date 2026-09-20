@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лендинги, которые продают</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --bg-soft: #F6F7F9;
+    --panel: #24272B;
+    --ink: #14161A;
+    --ink-muted: #6B7280;
+    --line: #E6E8EB;
+    --accent: #16C784;
+    --accent-strong: #0FA86D;
+    --accent-soft: #E4FBF1;
+    --on-panel-muted: #9CA3AF;
+    --shadow: 0 20px 40px rgba(20,22,26,0.08);
+    --radius: 20px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101214;
+      --bg-soft: #17191C;
+      --panel: #1D2023;
+      --ink: #EDEEF0;
+      --ink-muted: #9CA3AF;
+      --line: #2C2F34;
+      --accent: #22D98C;
+      --accent-strong: #17C784;
+      --accent-soft: #123328;
+      --on-panel-muted: #8A8F97;
+      --shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101214;
+    --bg-soft: #17191C;
+    --panel: #1D2023;
+    --ink: #EDEEF0;
+    --ink-muted: #9CA3AF;
+    --line: #2C2F34;
+    --accent: #22D98C;
+    --accent-strong: #17C784;
+    --accent-soft: #123328;
+    --on-panel-muted: #8A8F97;
+    --shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+
+  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+  .accent { color: var(--accent-strong); }
+  svg.ic { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- Scroll progress ---------- */
+  .success-track { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: var(--line); z-index: 1000; }
+  .success-fill { height: 100%; width: 0%; background: var(--accent); transition: background-color .4s ease; }
+
+  .to-top {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 1000;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .to-top.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .to-top svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  @media (prefers-reduced-motion: reduce) {
+    .to-top { transition: opacity 0.15s ease; }
+  }
+
+  /* ---------- Nav ---------- */
+  nav.topnav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+  }
+  .logo { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { color: var(--ink-muted); text-decoration: none; font-size: 0.92rem; font-weight: 500; }
+  @media (max-width: 760px) { .nav-links { display: none; } }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.92rem;
+    padding: 12px 22px; border-radius: 999px;
+    text-decoration: none; border: 1.5px solid transparent; cursor: pointer;
+  }
+  .btn-accent { background: var(--accent); color: #06231A; }
+  .btn-dark { background: var(--ink); color: var(--bg); }
+  .btn-outline { border-color: var(--line); color: var(--ink); background: transparent; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 40px 0 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+  .eyebrow-row { display: flex; gap: 18px; margin-bottom: 18px; }
+  .eyebrow-row span { font-size: 0.85rem; font-weight: 600; color: var(--ink-muted); }
+  h1.headline {
+    font-size: clamp(2.4rem, 4.6vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    max-width: 11ch;
+    margin-bottom: 20px;
+  }
+  .hero-sub { color: var(--ink-muted); font-size: 1.05rem; max-width: 42ch; margin-bottom: 28px; }
+
+  .hero-visual { position: relative; height: 340px; }
+  .glow {
+    position: absolute; inset: -40px auto auto -20px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity: 0.25; filter: blur(10px);
+    z-index: 0;
+  }
+  .mock-card {
+    position: absolute;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 18px;
+    z-index: 1;
+  }
+  .mock-main {
+    width: 78%; right: 0; top: 20px;
+  }
+  .mock-browser-dots { display: flex; gap: 5px; margin-bottom: 14px; }
+  .mock-browser-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+  .mock-headline-fake { font-weight: 800; font-size: 1.3rem; line-height: 1.2; margin-bottom: 10px; }
+  .mock-bar { height: 8px; border-radius: 4px; background: var(--bg-soft); margin-bottom: 8px; }
+  .mock-bar.short { width: 55%; }
+  .mock-cta-fake { display: inline-block; margin-top: 10px; background: var(--accent); color: #06231A; font-size: 0.72rem; font-weight: 700; padding: 6px 14px; border-radius: 999px; }
+  .mock-stat {
+    width: 190px; left: 0; bottom: 0;
+    z-index: 2;
+  }
+  .mock-stat .label { font-size: 0.72rem; color: var(--ink-muted); margin-bottom: 4px; }
+  .mock-stat .value { font-size: 1.5rem; font-weight: 800; }
+  .mock-stat .value.green { color: var(--accent-strong); }
+  @media (max-width: 860px) { .hero-visual { height: 300px; } .mock-main { width: 88%; } }
+
+  /* ---------- Stat row ---------- */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 26px 0 60px;
+  }
+  @media (max-width: 760px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+  .stat-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 24px 20px;
+    border-left: 1px solid var(--line);
+  }
+  .stat-item:first-child { border-left: none; }
+  @media (max-width: 760px) { .stat-item:nth-child(2n+1) { border-left: none; } }
+  .stat-item .ic-wrap { color: var(--ink); flex-shrink: 0; margin-top: 2px; }
+  .stat-item .num { font-weight: 800; font-size: 1.05rem; }
+  .stat-item .desc { color: var(--ink-muted); font-size: 0.82rem; margin-top: 2px; }
+
+  /* ---------- Dark offer panel ---------- */
+  section { padding: 20px 0; }
+  .panel-dark {
+    background: var(--panel);
+    border-radius: 28px;
+    padding: 46px 46px 0;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .panel-dark .ink-muted-on-dark { color: var(--on-panel-muted); }
+  .panel-dark h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.15; }
+  .panel-dark h2 .accent { color: var(--accent); }
+
+  /* ---------- Process (compact) ---------- */
+  .process-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 34px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .process-step {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 0.95rem;
+  }
+  .process-step .pnum {
+    font-weight: 800; color: var(--accent-strong); font-size: 0.85rem;
+  }
+
+  /* ---------- Lead form ---------- */
+  .lead {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    padding: 60px 0 70px;
+  }
+  @media (max-width: 760px) { .lead { grid-template-columns: 1fr; } }
+  .lead h2 { font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; line-height: 1.2; margin-bottom: 14px; max-width: 12ch; }
+  .lead p.hint { color: var(--ink-muted); max-width: 40ch; }
+  .lead-form { display: flex; flex-direction: column; gap: 12px; }
+  .lead-form input[type="text"], .lead-form input[type="tel"] {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.94rem;
+  }
+  .lead-form input::placeholder { color: var(--ink-muted); }
+  .consent { display: flex; gap: 8px; align-items: flex-start; font-size: 0.82rem; color: var(--ink-muted); margin: 4px 0 6px; }
+  .consent input { margin-top: 3px; }
+  .lead-form .btn { align-self: flex-start; }
+  .form-note { font-size: 0.82rem; color: var(--ink-muted); margin: 4px 0 0; min-height: 1.1em; }
+  .form-note.error { color: #C0392B; }
+
+  /* ---------- Features panel with mock ---------- */
+  .features-panel { padding: 20px 0 60px; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: center;
+    padding: 46px;
+  }
+  @media (max-width: 860px) { .features-grid { grid-template-columns: 1fr; padding: 34px 26px; } }
+  .features-grid h2 { color: #fff; font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; margin-bottom: 26px; }
+  .features-grid h2 .accent { color: var(--accent); }
+  .feature-line {
+    display: flex; gap: 14px; align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .feature-line:first-of-type { border-top: none; }
+  .feature-line .ic-wrap { color: var(--accent); flex-shrink: 0; }
+  .feature-line strong { color: #fff; font-weight: 600; font-size: 0.95rem; display: block; }
+  .feature-line p { margin: 4px 0 0; color: var(--on-panel-muted); font-size: 0.82rem; }
+
+  .browser-mock {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 18px;
+    color: var(--ink);
+  }
+  .browser-mock .row-label { font-size: 0.72rem; color: var(--ink-muted); margin: 14px 0 8px; font-weight: 600; }
+  .item-pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .item-pill { border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 0.74rem; color: var(--ink-muted); }
+
+  /* ---------- Closing CTA ---------- */
+  .cta-dark {
+    background: var(--panel);
+    border-radius: 28px;
+    padding: 50px 46px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 20px;
+    align-items: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  @media (max-width: 760px) { .cta-dark { grid-template-columns: 1fr; } }
+  .cta-dark h2 { font-size: clamp(1.7rem, 3.2vw, 2.3rem); font-weight: 800; line-height: 1.18; margin-bottom: 14px; }
+  .cta-dark h2 .accent { color: var(--accent); }
+  .cta-dark p { color: var(--on-panel-muted); max-width: 40ch; margin-bottom: 22px; }
+
+  /* ---------- Footer ---------- */
+  footer { padding: 50px 0 60px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-top: 1px solid var(--line); margin-top: 30px; }
+  footer .logo { font-size: 1rem; }
+  footer .contacts { display: flex; gap: 18px; }
+  footer .contacts a { color: var(--ink-muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="success-track"><div class="success-fill" id="successFill"></div></div>
+
+<button class="to-top" id="toTop" aria-label="Наверх страницы">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg>
+</button>
+
+<div class="wrap">
+
+  <nav class="topnav">
+    <div class="logo">Морозов Сергей</div>
+    <div class="nav-links">
+      <a href="#included">Что входит</a>
+      <a href="#process">Процесс</a>
+      <a href="#price">Цена</a>
+      <a href="#lead">Контакты</a>
+    </div>
+    <a class="btn btn-dark" href="#lead">Заказать</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <div class="eyebrow-row">
+        <span>Быстро</span><span>Понятно</span><span>Без сюрпризов</span>
+      </div>
+      <h1 class="headline">Лендинг, который <span class="accent">приносит заявки</span></h1>
+      <p class="hero-sub">Делаю сайты для малого бизнеса: понятный оффер, форма заявки, адаптив под телефон — готово за 5 дней, фиксированная цена.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a class="btn btn-accent" href="#lead">Оставить заявку</a>
+        <a class="btn btn-outline" href="#included">Что входит</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="glow"></div>
+      <div class="mock-card mock-main">
+        <div class="mock-browser-dots"><span></span><span></span><span></span></div>
+        <div class="mock-headline-fake">Ваш оффер<br>в одну строку</div>
+        <div class="mock-bar"></div>
+        <div class="mock-bar short"></div>
+        <span class="mock-cta-fake">Оставить заявку</span>
+      </div>
+      <div class="mock-card mock-stat">
+        <div class="label">Срок разработки</div>
+        <div class="value">5 дней</div>
+        <div class="label" style="margin-top:10px;">Цена</div>
+        <div class="value green">от 10 000 ₽</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="stat-row reveal">
+    <div class="stat-item">
+      <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg></span>
+      <div><div class="num">5 дней</div><div class="desc">срок разработки</div></div>
+    </div>
+    <div class="stat-item">
+      <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M3 9h18"></path></svg></span>
+      <div><div class="num">от 10 000 ₽</div><div class="desc">фиксированная цена</div></div>
+    </div>
+    <div class="stat-item">
+      <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15l3-4 3 3 4-6"></path></svg></span>
+      <div><div class="num">14 дней</div><div class="desc">правки бесплатно</div></div>
+    </div>
+    <div class="stat-item">
+      <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="12" height="16" rx="2"></rect><rect x="15" y="3" width="6" height="8" rx="1"></rect></svg></span>
+      <div><div class="num">100%</div><div class="desc">адаптив под телефон</div></div>
+    </div>
+  </div>
+
+  <section id="included">
+    <div class="panel-dark features-grid reveal">
+      <div>
+        <h2>Что <span class="accent">входит</span></h2>
+        <div class="feature-line">
+          <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19h16M4 19V9l8-6 8 6v10"></path></svg></span>
+          <div><strong>Прототип структуры</strong></div>
+        </div>
+        <div class="feature-line">
+          <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"></path></svg></span>
+          <div><strong>Уникальный дизайн</strong></div>
+        </div>
+        <div class="feature-line">
+          <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 9h18"></path></svg></span>
+          <div><strong>Форма сбора заявок</strong></div>
+        </div>
+        <div class="feature-line">
+          <span class="ic-wrap"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a13 13 0 0 1 0 18a13 13 0 0 1 0-18"></path></svg></span>
+          <div><strong>Публикация и домен</strong></div>
+        </div>
+      </div>
+      <div class="browser-mock">
+        <div class="mock-browser-dots"><span></span><span></span><span></span></div>
+        <div class="row-label">Разделы</div>
+        <div class="item-pill-row">
+          <span class="item-pill">Оффер</span>
+          <span class="item-pill">Преимущества</span>
+          <span class="item-pill">Форма</span>
+        </div>
+        <div class="row-label">Устройства</div>
+        <div class="item-pill-row">
+          <span class="item-pill">Десктоп</span>
+          <span class="item-pill">Телефон</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="process-row reveal">
+      <div class="process-step"><span class="pnum">01</span> Бриф</div>
+      <div class="process-step"><span class="pnum">02</span> Прототип</div>
+      <div class="process-step"><span class="pnum">03</span> Дизайн и сборка</div>
+      <div class="process-step"><span class="pnum">04</span> Запуск</div>
+    </div>
+  </section>
+
+  <section id="lead">
+    <div class="lead reveal">
+      <div>
+        <h2>Получите <span class="accent">условия</span> для своего проекта</h2>
+        <p class="hint">Оставьте контакты — пришлю цену и сроки в течение дня.</p>
+      </div>
+      <form class="lead-form" id="leadForm">
+        <input type="text" id="leadName" placeholder="Имя" required>
+        <input type="tel" id="leadContact" placeholder="Телефон или Telegram (@username)" required>
+        <label class="consent">
+          <input type="checkbox" id="leadConsent" required>
+          Даю согласие на обработку персональных данных
+        </label>
+        <button type="submit" class="btn btn-accent">Отправить</button>
+        <p class="form-note" id="leadNote"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="price">
+    <div class="cta-dark reveal" style="grid-template-columns: 1fr; text-align: center; padding: 56px 46px;">
+      <div style="max-width: 44ch; margin: 0 auto;">
+        <h2>Лендинг <span class="accent">от 10 000 ₽</span></h2>
+        <p>Фиксированная цена, 5 дней на разработку, 14 дней правок после запуска.</p>
+        <a class="btn btn-accent" href="#lead">Написать мне</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo">Морозов Сергей</div>
+    <div class="contacts">
+      <a href="mailto:plrtp@mail.ru">plrtp@mail.ru</a>
+      <a href="https://t.me/poleartop">t.me/poleartop</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var fill = document.getElementById('successFill');
+  if (!fill) return;
+
+  var low = [230, 232, 235];
+  var high = [22, 199, 132];
+
+  function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
+
+  function update() {
+    var doc = document.documentElement;
+    var scrollable = doc.scrollHeight - doc.clientHeight;
+    var pct = scrollable > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100)) : 0;
+    var t = pct / 100;
+
+    fill.style.width = pct + '%';
+    var r = lerp(low[0], high[0], t);
+    var g = lerp(low[1], high[1], t);
+    var b = lerp(low[2], high[2], t);
+    fill.style.backgroundColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+})();
+
+(function () {
+  var items = document.querySelectorAll('.reveal');
+  if (!items.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(function (el) { el.classList.add('is-visible'); });
+    return;
+  }
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  items.forEach(function (el) { observer.observe(el); });
+})();
+
+(function () {
+  var btn = document.getElementById('toTop');
+  if (!btn) return;
+
+  function toggle() {
+    if (window.scrollY > window.innerHeight * 0.6) {
+      btn.classList.add('is-visible');
+    } else {
+      btn.classList.remove('is-visible');
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  toggle();
+  window.addEventListener('scroll', toggle, { passive: true });
+})();
+
+(function () {
+  var form = document.getElementById('leadForm');
+  var note = document.getElementById('leadNote');
+  if (!form || !note) return;
+
+  // Замени на адрес своего сервера после деплоя, например:
+  // 'https://yourdomain.com/api/lead'
+  var LEAD_API_URL = 'https://plrtp.ru/api/lead';
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('leadName').value.trim();
+    var contact = document.getElementById('leadContact').value.trim();
+    var consent = document.getElementById('leadConsent').checked;
+    var submitBtn = form.querySelector('button[type="submit"]');
+
+    if (!name || !contact) {
+      note.textContent = 'Заполните имя и телефон/Telegram.';
+      note.classList.add('error');
+      return;
+    }
+    if (!consent) {
+      note.textContent = 'Нужно согласие на обработку персональных данных.';
+      note.classList.add('error');
+      return;
+    }
+
+    note.classList.remove('error');
+    note.textContent = 'Отправляю…';
+    submitBtn.disabled = true;
+
+    fetch(LEAD_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, contact: contact })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        submitBtn.disabled = false;
+        if (data.ok) {
+          note.classList.remove('error');
+          note.textContent = 'Заявка отправлена, скоро свяжусь с вами.';
+          form.reset();
+        } else {
+          note.classList.add('error');
+          note.textContent = 'Не получилось отправить. Попробуйте ещё раз.';
+        }
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        note.classList.add('error');
+        note.textContent = 'Не получилось отправить. Попробуйте ещё раз.';
+      });
+  });
+})();
+</script>
+
+</body>
+</html>
