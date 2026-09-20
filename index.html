@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сергей Морозов — лендинги для малого бизнеса</title>
+<meta name="description" content="Одностраничный сайт для малого бизнеса: от 10 000 ₽, пять рабочих дней, заявки приходят в Telegram.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:     #EDEEE8;
+    --surface:   #F6F7F2;
+    --ink:       #1B2320;
+    --ink-soft:  #5A6460;
+    --rule:      #D3D6CD;
+    --pen:       #2438C8;
+    --pen-on:    #FFFFFF;
+
+    --serif: 'Bitter', Georgia, 'Times New Roman', serif;
+    --sans:  'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    --gutter: 9.5rem;
+    --measure: 40rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:    #141816;
+      --surface:  #1B201D;
+      --ink:      #E6E8E2;
+      --ink-soft: #969C95;
+      --rule:     #2D322E;
+      --pen:      #93A8FF;
+      --pen-on:   #0E1424;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:    #141816;
+    --surface:  #1B201D;
+    --ink:      #E6E8E2;
+    --ink-soft: #969C95;
+    --rule:     #2D322E;
+    --pen:      #93A8FF;
+    --pen-on:   #0E1424;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; margin: 0; letter-spacing: -0.015em; }
+  p { margin: 0; }
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--pen);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Two-column band: section name sits in the left gutter, content on the right.
+     Collapses to a single stacked column on narrow screens. */
+  .band {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, 1fr);
+    gap: 0 2.5rem;
+    padding: 3.5rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .band > h2 {
+    font-family: var(--sans);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+    padding-top: 0.2rem;
+  }
+  .band > .band-body { max-width: var(--measure); }
+  @media (max-width: 720px) {
+    .band { grid-template-columns: 1fr; gap: 0; padding: 2.75rem 0; }
+    .band > h2 { margin-bottom: 1.25rem; }
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+    padding: 2rem 0 0;
+  }
+  .masthead .name { font-family: var(--serif); font-size: 1.0625rem; font-weight: 600; }
+  .masthead .reach { font-size: 0.9375rem; color: var(--ink-soft); text-decoration: none; }
+  .masthead .reach:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 4.5rem 0 4rem; }
+  .hero h1 {
+    font-size: clamp(2.125rem, 5.2vw, 3.25rem);
+    line-height: 1.12;
+    max-width: 17ch;
+    margin-bottom: 1.5rem;
+  }
+  .hero .lede {
+    max-width: 48ch;
+    color: var(--ink-soft);
+    margin-bottom: 2.75rem;
+  }
+  @media (max-width: 720px) { .hero { padding: 3rem 0 2.75rem; } }
+
+  /* ---------- Estimate block ---------- */
+  .estimate {
+    margin: 0 0 2.5rem;
+    max-width: 30rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.35rem 1.5rem;
+  }
+  .estimate .row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.42rem 0;
+  }
+  .estimate dt {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+  }
+  /* Dotted leader, as on a printed estimate: runs from the label to the value. */
+  .estimate dt::after {
+    content: "";
+    flex: 1 1 auto;
+    min-width: 1.5rem;
+    border-bottom: 1px dotted var(--rule);
+    transform: translateY(-0.2rem);
+  }
+  .estimate dd {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: var(--pen);
+    text-align: right;
+  }
+
+  /* The one motion moment on the page: the pen values fill themselves in. */
+  .estimate dd { opacity: 0; animation: ink-in 0.5s ease forwards; }
+  .estimate .row:nth-child(1) dd { animation-delay: 0.25s; }
+  .estimate .row:nth-child(2) dd { animation-delay: 0.38s; }
+  .estimate .row:nth-child(3) dd { animation-delay: 0.51s; }
+  @keyframes ink-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .estimate dd { opacity: 1; animation: none; }
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 0.85rem 1.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--pen);
+    background: var(--pen);
+    color: var(--pen-on);
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .btn:hover { opacity: 0.88; }
+  .btn[disabled] { opacity: 0.5; cursor: default; }
+
+  /* ---------- Included list ---------- */
+  .included { margin: 0; padding: 0; list-style: none; }
+  .included li {
+    padding: 0.95rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .included li:first-child { border-top: none; padding-top: 0; }
+  .included b { font-weight: 600; font-family: var(--serif); }
+  .included span { color: var(--ink-soft); }
+  .aside {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+    max-width: 44ch;
+  }
+
+  /* ---------- Schedule ---------- */
+  .schedule { margin: 0; }
+  .schedule .step {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0 1.25rem;
+    padding: 0.95rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .schedule .step:first-child { border-top: none; padding-top: 0; }
+  .schedule dt {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding-top: 0.15rem;
+  }
+  .schedule dd { margin: 0; color: var(--ink-soft); }
+  @media (max-width: 480px) {
+    .schedule .step { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+
+  /* ---------- Form ---------- */
+  .band-lede { color: var(--ink-soft); max-width: 44ch; margin-bottom: 1.75rem; }
+  .form { display: flex; flex-direction: column; gap: 0.85rem; max-width: 26rem; }
+  .form label.field { display: block; }
+  .form .field-name {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+  }
+  .form input[type="text"],
+  .form input[type="tel"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.75rem 0.85rem;
+  }
+  .form input::placeholder { color: var(--ink-soft); opacity: 0.75; }
+  .form input:focus-visible { border-color: var(--pen); }
+  .consent {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin: 0.35rem 0 0.3rem;
+    cursor: pointer;
+  }
+  .consent input { margin: 0.28rem 0 0; accent-color: var(--pen); flex-shrink: 0; }
+  .form .btn { align-self: flex-start; }
+  .note {
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+    min-height: 1.5em;
+    margin: 0;
+  }
+  .note.is-error { color: #C0392B; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .note.is-error { color: #FF9A8F; }
+  }
+  :root[data-theme="dark"] .note.is-error { color: #FF9A8F; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding: 2.25rem 0 3rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+  }
+  footer .links { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <span class="name">Сергей Морозов</span>
+    <a class="reach" href="https://t.me/poleartop">Telegram: @poleartop</a>
+  </header>
+
+  <section class="hero">
+    <h1>Одностраничный сайт, который объясняет ваше дело и собирает заявки</h1>
+    <p class="lede">Работаю один, поэтому отвечаю за всё сразу: текст, дизайн, вёрстку и запуск. Цену и срок называю до начала работы и дальше не меняю.</p>
+
+    <dl class="estimate">
+      <div class="row"><dt>Цена</dt><dd>от 10 000 ₽</dd></div>
+      <div class="row"><dt>Срок</dt><dd>5 рабочих дней</dd></div>
+      <div class="row"><dt>Правки после запуска</dt><dd>14 дней, бесплатно</dd></div>
+    </dl>
+
+    <a class="btn" href="#lead">Оставить заявку</a>
+  </section>
+
+  <section class="band">
+    <h2>Что входит</h2>
+    <div class="band-body">
+      <ul class="included">
+        <li><b>Структура страницы.</b> <span>Решаем, какие блоки нужны и в каком порядке их читает ваш клиент.</span></li>
+        <li><b>Текст.</b> <span>Формулирую простыми словами, что вы делаете и чем отличаетесь от соседей.</span></li>
+        <li><b>Дизайн под ваше дело.</b> <span>Рисую с нуля, а не подставляю ваш логотип в готовый шаблон.</span></li>
+        <li><b>Форма заявки.</b> <span>Заявка приходит вам в Telegram через секунду после отправки.</span></li>
+        <li><b>Публикация.</b> <span>Подключаю домен и хостинг — сайт открывается по вашему адресу.</span></li>
+      </ul>
+      <p class="aside">Не берусь за интернет-магазины, личные кабинеты и настройку рекламы. Если вам нужно именно это, скажу сразу на первом созвоне.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Как проходит работа</h2>
+    <div class="band-body">
+      <dl class="schedule">
+        <div class="step">
+          <dt>День 1</dt>
+          <dd>Созваниваемся на полчаса. Спрашиваю про клиентов, цены и то, что вас обычно спрашивают.</dd>
+        </div>
+        <div class="step">
+          <dt>День 2</dt>
+          <dd>Присылаю структуру страницы и текст. Вы читаете и говорите, где я не прав.</dd>
+        </div>
+        <div class="step">
+          <dt>Дни 3–4</dt>
+          <dd>Рисую дизайн и собираю страницу — на компьютере и на телефоне.</dd>
+        </div>
+        <div class="step">
+          <dt>День 5</dt>
+          <dd>Открываем сайт: подключаю домен и форму, проверяем заявку вместе.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="band" id="lead">
+    <h2>Заявка</h2>
+    <div class="band-body">
+      <p class="band-lede">Оставьте контакты — отвечу сегодня, назову точную цену и срок для вашего дела.</p>
+      <form class="form" id="leadForm" novalidate>
+        <label class="field">
+          <span class="field-name">Как вас зовут</span>
+          <input type="text" id="leadName" name="name" autocomplete="name" placeholder="Сергей">
+        </label>
+        <label class="field">
+          <span class="field-name">Телефон или Telegram</span>
+          <input type="tel" id="leadContact" name="contact" autocomplete="tel" placeholder="+7 900 000-00-00 или @username">
+        </label>
+        <label class="consent">
+          <input type="checkbox" id="leadConsent">
+          <span>Согласен на обработку персональных данных</span>
+        </label>
+        <button type="submit" class="btn">Отправить заявку</button>
+        <p class="note" id="leadNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <span>Сергей Морозов, дизайн и разработка сайтов</span>
+    <span class="links">
+      <a href="mailto:plrtp@mail.ru">plrtp@mail.ru</a>
+      <a href="https://t.me/poleartop">t.me/poleartop</a>
+    </span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('leadForm');
+  var note = document.getElementById('leadNote');
+  if (!form || !note) return;
+
+  // Адрес API-сервера, который пересылает заявки в Telegram.
+  var LEAD_API_URL = 'https://plrtp.ru/api/lead';
+
+  function say(text, isError) {
+    note.textContent = text;
+    note.classList.toggle('is-error', !!isError);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var nameField = document.getElementById('leadName');
+    var contactField = document.getElementById('leadContact');
+    var name = nameField.value.trim();
+    var contact = contactField.value.trim();
+    var submitBtn = form.querySelector('button[type="submit"]');
+
+    if (!name) { say('Напишите, как к вам обращаться.', true); nameField.focus(); return; }
+    if (!contact) { say('Оставьте телефон или Telegram, чтобы я мог ответить.', true); contactField.focus(); return; }
+    if (!document.getElementById('leadConsent').checked) {
+      say('Отметьте согласие на обработку персональных данных.', true);
+      return;
+    }
+
+    say('Отправляю…', false);
+    submitBtn.disabled = true;
+
+    fetch(LEAD_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, contact: contact })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        submitBtn.disabled = false;
+        if (data && data.ok) {
+          form.reset();
+          say('Заявка отправлена. Отвечу сегодня.', false);
+        } else {
+          say('Заявка не ушла. Попробуйте ещё раз или напишите в Telegram: @poleartop', true);
+        }
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        say('Заявка не ушла. Попробуйте ещё раз или напишите в Telegram: @poleartop', true);
+      });
+  });
+})();
+</script>
+
+</body>
+</html>
