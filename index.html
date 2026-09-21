@@ -3,11 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сергей Морозов — лендинги для малого бизнеса</title>
-<meta name="description" content="Одностраничный сайт для малого бизнеса: от 10 000 ₽, пять рабочих дней, заявки приходят в Telegram.">
+<title>Сергей Морозов — сайты для малого бизнеса за 7 дней</title>
+<meta name="description" content="Одностраничный сайт для малого бизнеса: 5 000 ₽, семь дней, заявки приходят в Telegram.">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Сайт под ключ за 7 дней">
+<meta property="og:description" content="Одностраничные сайты для мастеров, студий, ремонта и доставки. 5 000 ₽, 7 дней, заявки — сразу в Telegram.">
+<meta property="og:url" content="https://plrtp.ru/">
+<link rel="canonical" href="https://plrtp.ru/">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -21,403 +29,920 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/112856913" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+
 <style>
+@layer reset, tokens, base, layout, components, utilities;
+
+/* ============================================================
+   TOKENS — три уровня: примитивы → семантика → компоненты.
+   Направление: швейцарская типографская сетка. Чёрная тушь,
+   белая бумага, один зелёный сигнал. Ни одного скруглённого
+   угла, ни одной мягкой тени — глубина строится линейками и
+   инверсией, а не размытием.
+   ============================================================ */
+@layer tokens {
   :root {
-    --paper:     #EDEEE8;
-    --surface:   #F6F7F2;
-    --ink:       #1B2320;
-    --ink-soft:  #5A6460;
-    --rule:      #D3D6CD;
-    --pen:       #2438C8;
-    --pen-on:    #FFFFFF;
+    color-scheme: light;
 
-    --serif: 'Bitter', Georgia, 'Times New Roman', serif;
-    --sans:  'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* Примитивы */
+    --c-ink-950:  #0A0A0B;
+    --c-ink-600:  #5E5E63;
+    --c-ink-400:  #72727B;
+    --c-ink-200:  #D8D8D6;
+    --c-paper-0:  #FFFFFF;
+    --c-paper-50: #F1F1EF;
+    --c-green:      #00A651;   /* плашка: чёрный текст на ней 6.2:1 */
+    --c-green-deep: #007A3A;   /* текстом на бумаге 5.5:1 */
+    --c-red-700:  #C21F14;
+    /* Цитата фирменных цветов Telegram — не палитра страницы.
+       Градиент годится под глиф логотипа (декоративный), но белый
+       текст на нём даёт 3:1, поэтому у бейджа тон темнее. */
+    --c-tg-1:     #2AABEE;
+    --c-tg-2:     #229ED9;
+    --c-tg-deep:  #17759F;
 
-    --gutter: 9.5rem;
-    --measure: 40rem;
+    /* Семантика — светлая тема */
+    --paper:        var(--c-paper-0);
+    --paper-2:      var(--c-paper-50);
+    --ink:          var(--c-ink-950);
+    --ink-2:        var(--c-ink-600);
+    --ink-3:        var(--c-ink-400);
+    --rule:         var(--c-ink-200);
+    --rule-strong:  var(--c-ink-950);
+    --signal:       var(--c-green);
+    --signal-ink:   var(--c-ink-950);
+    --err:          var(--c-red-700);
+    --ok:           var(--c-green-deep);
+    --live:         var(--c-green);
+
+    /* Гарнитуры */
+    --f-display: 'Unbounded', 'Arial Black', sans-serif;
+    --f-text:    'IBM Plex Sans', 'Segoe UI', sans-serif;
+    --f-mono:    'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+    /* Кегль — текучий, без брейкпоинтов */
+    --t-mono:    clamp(0.6875rem, 0.64rem + 0.2vw, 0.75rem);
+    --t-sm:      clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+    --t-body:    clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+    --t-lead:    clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
+    --t-h3:      clamp(1.125rem, 1rem + 0.5vw, 1.4375rem);
+    --t-h2:      clamp(1.75rem, 1.1rem + 2.8vw, 3.25rem);
+    /* Потолок подобран под контейнер в 1180: при 72px заголовок уже
+       не помещался в строку и переносился, хотя на 1180 умещался —
+       кегль рос, а полоса набора нет. */
+    --t-h1:      clamp(2.25rem, 1rem + 4.4vw, 4rem);
+    --t-num:     clamp(1.75rem, 1.1rem + 2.4vw, 2.75rem);
+
+    /* Ритм — кратно восьми */
+    --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;
+    --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+
+    --gap: clamp(16px, 2vw, 24px);
+    --pad: clamp(20px, 4vw, 56px);
+    --max: 1180px;
+
+    --hair: 1px;
+    --bold-rule: 2px;   /* объекты: кнопка, поле, рамка */
+    --rule-section: 1px; /* разделители полос */
+
+    --ease: cubic-bezier(.2, .8, .2, 1);
   }
+}
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --paper:    #141816;
-      --surface:  #1B201D;
-      --ink:      #E6E8E2;
-      --ink-soft: #969C95;
-      --rule:     #2D322E;
-      --pen:      #93A8FF;
-      --pen-on:   #0E1424;
-    }
-  }
-  :root[data-theme="dark"] {
-    --paper:    #141816;
-    --surface:  #1B201D;
-    --ink:      #E6E8E2;
-    --ink-soft: #969C95;
-    --rule:     #2D322E;
-    --pen:      #93A8FF;
-    --pen-on:   #0E1424;
-  }
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body, h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  img, svg { max-inline-size: 100%; display: block; }
+  button, input, textarea { font: inherit; color: inherit; }
+}
 
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-
+@layer base {
   body {
-    margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: var(--sans);
-    font-size: 1.0625rem;
-    line-height: 1.6;
+    font-family: var(--f-text);
+    font-size: var(--t-body);
+    line-height: 1.55;
+    font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  h1, h2, h3 { font-family: var(--serif); font-weight: 600; margin: 0; letter-spacing: -0.015em; }
-  p { margin: 0; }
-  a { color: inherit; }
+  h1, h2 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    text-transform: none;
+  }
+  h3 { font-family: var(--f-text); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; }
+  p { text-wrap: pretty; }
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  strong, b { font-weight: 600; }
 
   :focus-visible {
-    outline: 2px solid var(--pen);
-    outline-offset: 3px;
-    border-radius: 2px;
+    outline: var(--bold-rule) solid var(--ink);
+    outline-offset: 2px;
   }
 
-  .page {
-    max-width: 52rem;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+  [id] { scroll-margin-block-start: 88px; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+}
+
+@layer layout {
+  .shell {
+    inline-size: 100%;
+    max-inline-size: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--pad);
   }
 
-  /* Two-column band: section name sits in the left gutter, content on the right.
-     Collapses to a single stacked column on narrow screens. */
-  .band {
+  /* Полосу открывает линейка, а не рамка. Волосяная: ритм должен
+     читаться, а не давить — жирный штрих оставлен объектам. */
+  .band { border-block-start: var(--rule-section) solid var(--rule-strong); }
+  .band__in { padding-block: clamp(44px, 5.5vw, 88px); }
+
+  /* Заголовок секции: мono-метка в левой колонке, крупный
+     заголовок в правой. Классическая двухколонная полоса. */
+  .shead {
     display: grid;
-    grid-template-columns: var(--gutter) minmax(0, 1fr);
-    gap: 0 2.5rem;
-    padding: 3.5rem 0;
-    border-top: 1px solid var(--rule);
+    grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+    gap: var(--s4) clamp(24px, 4vw, 64px);
+    margin-block-end: clamp(24px, 3.5vw, 48px);
   }
-  .band > h2 {
-    font-family: var(--sans);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: var(--ink-soft);
-    letter-spacing: 0;
-    padding-top: 0.2rem;
+  .shead__tag { grid-column: 1; }
+  .shead__body { grid-column: 2; }
+  /* ch считается от кегля самого элемента: мера задаётся заголовку и
+     абзацу по отдельности, иначе крупный заголовок душится мерой,
+     посчитанной по основному тексту. */
+  .shead__body .h2 { max-inline-size: 15ch; }
+  .shead__body .deck { max-inline-size: 46ch; }
+  @media (max-width: 780px) {
+    .shead { grid-template-columns: 1fr; gap: var(--s4); }
+    .shead__tag, .shead__body { grid-column: 1; }
+    .shead__body .h2 { max-inline-size: none; }
   }
-  .band > .band-body { max-width: var(--measure); }
-  @media (max-width: 720px) {
-    .band { grid-template-columns: 1fr; gap: 0; padding: 2.75rem 0; }
-    .band > h2 { margin-bottom: 1.25rem; }
-  }
+}
 
-  /* ---------- Masthead ---------- */
-  .masthead {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem 1.5rem;
-    flex-wrap: wrap;
-    padding: 2rem 0 0;
-  }
-  .masthead .name { font-family: var(--serif); font-size: 1.0625rem; font-weight: 600; }
-  .masthead .reach { font-size: 0.9375rem; color: var(--ink-soft); text-decoration: none; }
-  .masthead .reach:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+@layer components {
 
-  /* ---------- Hero ---------- */
-  .hero { padding: 4.5rem 0 4rem; }
-  .hero h1 {
-    font-size: clamp(2.125rem, 5.2vw, 3.25rem);
-    line-height: 1.12;
-    max-width: 17ch;
-    margin-bottom: 1.5rem;
-  }
-  .hero .lede {
-    max-width: 48ch;
-    color: var(--ink-soft);
-    margin-bottom: 2.75rem;
-  }
-  @media (max-width: 720px) { .hero { padding: 3rem 0 2.75rem; } }
-
-  /* ---------- Estimate block ---------- */
-  .estimate {
-    margin: 0 0 2.5rem;
-    max-width: 30rem;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 1.35rem 1.5rem;
-  }
-  .estimate .row {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    padding: 0.42rem 0;
-  }
-  .estimate dt {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    flex: 1 1 auto;
-    min-width: 0;
-    font-size: 0.9375rem;
-    color: var(--ink-soft);
-  }
-  /* Dotted leader, as on a printed estimate: runs from the label to the value. */
-  .estimate dt::after {
-    content: "";
-    flex: 1 1 auto;
-    min-width: 1.5rem;
-    border-bottom: 1px dotted var(--rule);
-    transform: translateY(-0.2rem);
-  }
-  .estimate dd {
-    margin: 0;
-    font-family: var(--serif);
+  /* ---------- Мелкая типографика ---------- */
+  .tag {
+    font-family: var(--f-mono);
+    font-size: var(--t-mono);
     font-weight: 600;
-    font-size: 1.0625rem;
-    color: var(--pen);
-    text-align: right;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    display: flex;
+    align-items: baseline;
+    gap: var(--s2);
   }
+  .tag__n { color: var(--ink); }
 
-  /* The one motion moment on the page: the pen values fill themselves in. */
-  .estimate dd { opacity: 0; animation: ink-in 0.5s ease forwards; }
-  .estimate .row:nth-child(1) dd { animation-delay: 0.25s; }
-  .estimate .row:nth-child(2) dd { animation-delay: 0.38s; }
-  .estimate .row:nth-child(3) dd { animation-delay: 0.51s; }
-  @keyframes ink-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) {
-    .estimate dd { opacity: 1; animation: none; }
-  }
+  .h2 { font-size: var(--t-h2); }
+  .deck { font-size: var(--t-lead); line-height: 1.4; color: var(--ink-2); margin-block-start: var(--s4); }
+  .mono { font-family: var(--f-mono); font-size: var(--t-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .num { font-family: var(--f-display); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
 
-  /* ---------- Buttons ---------- */
+  /* ---------- Кнопки: инверсия вместо подъёма ----------
+     Никаких теней и смещений. Нажатие читается сменой полярности —
+     как переключатель, а не как парящая плитка. */
   .btn {
-    display: inline-block;
-    font-family: var(--sans);
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.2;
-    padding: 0.85rem 1.6rem;
-    border-radius: 4px;
-    border: 1px solid var(--pen);
-    background: var(--pen);
-    color: var(--pen-on);
-    text-decoration: none;
-    cursor: pointer;
-    transition: opacity 0.15s ease;
-  }
-  .btn:hover { opacity: 0.88; }
-  .btn[disabled] { opacity: 0.5; cursor: default; }
-
-  /* ---------- Included list ---------- */
-  .included { margin: 0; padding: 0; list-style: none; }
-  .included li {
-    padding: 0.95rem 0;
-    border-top: 1px solid var(--rule);
-  }
-  .included li:first-child { border-top: none; padding-top: 0; }
-  .included b { font-weight: 600; font-family: var(--serif); }
-  .included span { color: var(--ink-soft); }
-  .aside {
-    margin-top: 1.75rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--rule);
-    font-size: 0.9375rem;
-    color: var(--ink-soft);
-    max-width: 44ch;
-  }
-
-  /* ---------- Schedule ---------- */
-  .schedule { margin: 0; }
-  .schedule .step {
-    display: grid;
-    grid-template-columns: 6.5rem minmax(0, 1fr);
-    gap: 0 1.25rem;
-    padding: 0.95rem 0;
-    border-top: 1px solid var(--rule);
-  }
-  .schedule .step:first-child { border-top: none; padding-top: 0; }
-  .schedule dt {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 0.9375rem;
-    padding-top: 0.15rem;
-  }
-  .schedule dd { margin: 0; color: var(--ink-soft); }
-  @media (max-width: 480px) {
-    .schedule .step { grid-template-columns: 1fr; gap: 0.15rem; }
-  }
-
-  /* ---------- Form ---------- */
-  .band-lede { color: var(--ink-soft); max-width: 44ch; margin-bottom: 1.75rem; }
-  .form { display: flex; flex-direction: column; gap: 0.85rem; max-width: 26rem; }
-  .form label.field { display: block; }
-  .form .field-name {
-    display: block;
-    font-size: 0.875rem;
-    color: var(--ink-soft);
-    margin-bottom: 0.35rem;
-  }
-  .form input[type="text"],
-  .form input[type="tel"] {
-    width: 100%;
-    font-family: inherit;
-    font-size: 1rem;
-    color: var(--ink);
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 0.75rem 0.85rem;
-  }
-  .form input::placeholder { color: var(--ink-soft); opacity: 0.75; }
-  .form input:focus-visible { border-color: var(--pen); }
-  .consent {
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-start;
-    font-size: 0.875rem;
-    color: var(--ink-soft);
-    margin: 0.35rem 0 0.3rem;
-    cursor: pointer;
-  }
-  .consent input { margin: 0.28rem 0 0; accent-color: var(--pen); flex-shrink: 0; }
-  .form .btn { align-self: flex-start; }
-  .note {
-    font-size: 0.9375rem;
-    color: var(--ink-soft);
-    min-height: 1.5em;
-    margin: 0;
-  }
-  .note.is-error { color: #C0392B; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .note.is-error { color: #FF9A8F; }
-  }
-  :root[data-theme="dark"] .note.is-error { color: #FF9A8F; }
-
-  /* ---------- Footer ---------- */
-  footer {
-    display: flex;
+    --btn-bg: var(--signal);
+    --btn-fg: var(--signal-ink);
+    display: inline-flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
-    padding: 2.25rem 0 3rem;
-    border-top: 1px solid var(--rule);
-    font-size: 0.9375rem;
-    color: var(--ink-soft);
+    gap: var(--s5);
+    inline-size: fit-content;
+    min-block-size: 56px;
+    padding: var(--s4) var(--s5);
+    border: var(--bold-rule) solid var(--ink);
+    border-radius: 0;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-family: var(--f-mono);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .18s var(--ease), color .18s var(--ease);
   }
-  footer .links { display: flex; gap: 1.25rem; flex-wrap: wrap; }
-  footer a { text-decoration: none; }
-  footer a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .btn__arrow { transition: transform .18s var(--ease); }
+  .btn:hover { --btn-bg: var(--ink); --btn-fg: var(--paper); }
+  .btn:hover .btn__arrow { transform: translateX(6px); }
+  .btn:active { --btn-bg: var(--signal); --btn-fg: var(--signal-ink); }
+
+  .btn--ghost { --btn-bg: transparent; --btn-fg: var(--ink); }
+  .btn--ghost:hover { --btn-bg: var(--ink); --btn-fg: var(--paper); }
+
+  .btn--sm { min-block-size: 40px; padding: var(--s2) var(--s4); gap: var(--s3); }
+  .btn--wide { inline-size: 100%; }
+  .btn[disabled] { opacity: .45; pointer-events: none; }
+
+  /* ---------- Шапка ---------- */
+  .masthead {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-block-end: var(--rule-section) solid var(--rule-strong);
+  }
+  .masthead__in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s4);
+    block-size: 64px;
+  }
+  .sig { display: flex; align-items: center; gap: var(--s3); text-decoration: none; }
+  .sig__mark {
+    inline-size: 30px; block-size: 30px; flex: none;
+    background: var(--ink); color: var(--paper);
+    display: grid; place-items: center;
+    font-family: var(--f-display); font-weight: 800; font-size: 11px; letter-spacing: -0.03em;
+  }
+  .sig__name { font-family: var(--f-display); font-weight: 700; font-size: 0.875rem; letter-spacing: -0.03em; white-space: nowrap; }
+  .masthead__right { display: flex; align-items: center; gap: clamp(12px, 2vw, 28px); }
+  .masthead__meta { color: var(--ink-2); text-decoration: none; }
+  .masthead__meta:hover { color: var(--ink); text-decoration: underline; }
+  @media (max-width: 420px) {
+    .sig__name { font-size: 0.75rem; }
+    .sig { gap: var(--s2); }
+  }
+
+  /* ---------- Герой ----------
+     Поэтажная композиция плаката: метка, гигантский заголовок во всю
+     полосу, под ним две колонки, внизу шкала фактов. Заголовок не
+     делит ширину с картинкой — он и есть главное событие экрана. */
+  .hero__top {
+    display: flex; flex-wrap: wrap; gap: var(--s3) var(--s5);
+    justify-content: space-between; align-items: baseline;
+    padding-block: var(--s5);
+  }
+  .hero__status { display: inline-flex; align-items: center; gap: var(--s2); }
+  .blip {
+    inline-size: 9px; block-size: 9px; flex: none;
+    background: var(--live);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Мягкое дыхание вместо жёсткого мигания: при резком переключении
+       на 25% индикатор почти половину цикла выглядит выцветшим, и
+       зелёный перестаёт читаться зелёным. */
+    .blip { animation: blip 2s ease-in-out infinite; }
+    @keyframes blip {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .5; transform: scale(.78); }
+    }
+  }
+
+  .hero h1 {
+    font-weight: 800;
+    font-size: var(--t-h1);
+    margin-block: clamp(8px, 1.5vw, 20px) clamp(24px, 4vw, 48px);
+  }
+  /* Выделять смысловую часть заголовка заливкой не нужно: в
+     типографике эту работу делают кегль и позиция. Цветной блок
+     такого размера перебивал единственную кнопку на экране. */
+
+  .hero__body {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+    padding-block-end: clamp(32px, 5vw, 64px);
+  }
+  .hero__pitch .deck { max-inline-size: 46ch; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: var(--s3); margin-block-start: var(--s6); }
+  @media (max-width: 900px) {
+    /* align-items:start из сеточной раскладки в колоночном flex
+       работает по поперечной оси и сжимал макет по содержимому —
+       299px вместо 350. Возвращаем растяжение. */
+    .hero__body { display: flex; flex-direction: column; align-items: stretch; }
+    .hero__cta .btn { inline-size: 100%; }
+  }
+
+  /* Шкала фактов: вертикальные линейки вместо плиток. */
+  /* Шкала стоит в левой колонке героя, поэтому меряется по ней,
+     а не по всей полосе. */
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-block-start: clamp(28px, 4vw, 44px);
+    padding-block-start: var(--s5);
+    border-block-start: var(--hair) solid var(--rule);
+  }
+  .scale__cell { padding: 0 var(--s4) 0 clamp(16px, 2vw, 24px); border-inline-start: var(--hair) solid var(--rule); }
+  .scale__cell:first-child { padding-inline-start: 0; border-inline-start: 0; }
+  .scale__v { font-family: var(--f-display); font-weight: 800; font-size: var(--t-num); line-height: 1; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+  .scale__k { color: var(--ink-2); font-size: var(--t-sm); margin-block-start: var(--s2); max-inline-size: 22ch; }
+  @media (max-width: 620px) {
+    .scale { gap: 0; }
+    .scale__cell { padding: 0 var(--s2) 0 var(--s3); }
+    .scale__cell:first-child { padding-inline-start: 0; }
+    .scale__v { font-size: clamp(1.5rem, 6.4vw, 1.875rem); }
+    .scale__k { font-size: 0.8125rem; max-inline-size: none; }
+  }
+
+  /* ---------- Макет браузера ----------
+     Собран целиком на CSS, ни одной картинки: это одновременно
+     и обещание, и его доказательство. */
+  .stage { position: relative; }
+  .frame { border: var(--bold-rule) solid var(--ink); background: var(--paper); }
+  .frame__bar {
+    display: flex; align-items: center; gap: var(--s3);
+    padding: var(--s2) var(--s3);
+    border-block-end: var(--bold-rule) solid var(--ink);
+    background: var(--paper-2);
+  }
+  .frame__dots { display: flex; gap: 5px; flex: none; }
+  .frame__dots i { inline-size: 8px; block-size: 8px; background: var(--ink); }
+  .frame__url {
+    flex: 1; min-inline-size: 0; text-align: center;
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-2);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .frame__screen { padding: var(--s4); display: grid; gap: var(--s4); }
+  .fx-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
+  .fx-logo { display: flex; align-items: center; gap: 6px; }
+  .fx-logo i { inline-size: 14px; block-size: 14px; background: var(--ink); flex: none; }
+  .fx { block-size: 7px; background: var(--rule); }
+  .fx--ink { background: var(--ink); block-size: 13px; }
+  .fx--mid { background: var(--ink-3); }
+  .fx-links { display: flex; gap: 8px; }
+  .fx-links .fx { inline-size: 24px; block-size: 5px; }
+  .fx-hero { display: grid; gap: 8px; }
+  /* Кнопка внутри макета — это кнопка на сайте клиента, а в языке
+     страницы кнопка всегда зелёная. Цвет здесь не украшение,
+     а то же самое правило, применённое внутрь примера. */
+  .fx-cta { margin-block-start: 4px; block-size: 26px; inline-size: 118px; background: var(--signal); border: 1.5px solid var(--ink); }
+  .fx-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
+  .fx-card { border: 1.5px solid var(--ink); padding: 10px; display: grid; gap: 6px; }
+  .fx-card i { inline-size: 12px; block-size: 12px; background: var(--ink); display: block; }
+
+  /* ---------- Уведомление о заявке ----------
+     Единственный объект на странице, который цитирует чужой
+     интерфейс, и цитирует честно: кружок аватара, фирменный синий,
+     бумажный самолётик, счётчик непрочитанного. Это доказательство
+     обещания, поэтому оно должно быть узнаваемым, а не абстрактным.
+     Рамка браузера рядом осталась нейтральной нарочно: «ваш сайт»
+     спокоен, «заявка» — живая. */
+  .ping {
+    position: absolute;
+    inset-inline-start: clamp(-16px, -2vw, 0px);
+    inset-block-end: -44px;
+    inline-size: min(324px, 92%);
+    padding: var(--s4);
+    background: var(--paper);
+    color: var(--ink);
+    border: var(--bold-rule) solid var(--ink);
+    /* Тень резкая и сплошная — приём печати, а не размытый ореол:
+       даёт объём, не нарушая запрет на мягкие тени. */
+    box-shadow: 7px 7px 0 var(--ink);
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .stage:hover .ping { transform: translate(-3px, -3px); box-shadow: 10px 10px 0 var(--ink); }
+
+  .ping__head { display: flex; align-items: center; gap: var(--s2); }
+  .ping__ava {
+    inline-size: 34px; block-size: 34px; flex: none;
+    /* Единственная окружность на странице: это цитата аватара из
+       чужого интерфейса, а не отступление от прямых углов. */
+    border-radius: 50%;
+    background: linear-gradient(160deg, var(--c-tg-1), var(--c-tg-2));
+    color: #FFFFFF;
+    display: grid; place-items: center;
+  }
+  .ping__app {
+    font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2);
+  }
+  .ping__time { margin-inline-start: auto; font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.08em; color: var(--ink-3); }
+  .ping__badge {
+    inline-size: 20px; block-size: 20px; flex: none;
+    border-radius: 50%;
+    background: var(--c-tg-deep); color: #FFFFFF;
+    font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+    display: grid; place-items: center;
+  }
+  .ping__body { margin-block-start: var(--s3); }
+  .ping__t { display: block; font-weight: 600; font-size: 0.9375rem; line-height: 1.3; }
+  .ping__s { display: block; font-size: 0.875rem; line-height: 1.4; color: var(--ink-2); margin-block-start: 3px; }
+  .ping__s b { color: var(--ink); font-weight: 600; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Заявка прилетает, а не оказывается нарисованной: карточка
+       приезжает справа, следом «падает» счётчик непрочитанного. */
+    .ping { animation: ping-in .5s var(--ease) 1.1s both; }
+    .ping__badge { animation: badge-pop .32s var(--ease) 1.5s both; }
+    @keyframes ping-in {
+      from { opacity: 0; transform: translate(26px, 10px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes badge-pop {
+      0%   { opacity: 0; transform: scale(.2); }
+      70%  { opacity: 1; transform: scale(1.18); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  }
+
+  @media (max-width: 900px) {
+    .ping {
+      position: static;
+      inline-size: 92%;
+      margin-block-start: -26px;   /* наезд на нижний край макета */
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+    .stage:hover .ping { transform: none; box-shadow: 6px 6px 0 var(--ink); }
+  }
+
+  /* ---------- Вопросы ---------- */
+  .qa { max-inline-size: 760px; border-block-start: var(--hair) solid var(--rule); }
+  .qa details { border-block-end: var(--hair) solid var(--rule); }
+  .qa summary {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 32px;
+    gap: clamp(12px, 2vw, 28px);
+    align-items: start;
+    padding-block: clamp(18px, 2vw, 24px);
+    cursor: pointer;
+    list-style: none;
+  }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary:hover .qa__q { text-decoration: underline; text-decoration-thickness: 2px; }
+  .qa__n { font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600; letter-spacing: 0.1em; color: var(--ink-3); padding-block-start: 3px; }
+  .qa__q { font-size: var(--t-h3); font-weight: 600; letter-spacing: -0.015em; line-height: 1.25; }
+  .qa__pm {
+    justify-self: end;
+    font-family: var(--f-display); font-weight: 700; font-size: 1.25rem; line-height: 1;
+    inline-size: 32px; block-size: 32px;
+    display: grid; place-items: center;
+    border: var(--hair) solid var(--rule-strong);
+    transition: background-color .18s var(--ease);
+  }
+  .qa details[open] .qa__pm { background: var(--signal); color: var(--signal-ink); }
+  .qa__a {
+    grid-column: 2;
+    padding-inline-start: calc(52px + clamp(12px, 2vw, 28px));
+    padding-block-end: clamp(24px, 3vw, 36px);
+    max-inline-size: 62ch;
+    color: var(--ink-2);
+  }
+  .qa__a p + p { margin-block-start: var(--s3); }
+  @media (max-width: 640px) {
+    .qa summary { grid-template-columns: 36px minmax(0, 1fr) 30px; gap: var(--s3); }
+    .qa__a { padding-inline-start: calc(36px + var(--s3)); }
+  }
+
+  /* ---------- Форма ---------- */
+  /* Раньше здесь были две колонки: слева заголовок, справа форма.
+     После снятия блока обещаний левая колонка осела до 201px против
+     643px формы — 442px пустоты в половине полосы. Теперь заголовок
+     идёт обычной полосой, а форма встаёт под ним в той же колонке,
+     что и заголовок: та же схема, что у вопросов. */
+  .lead-form {
+    max-inline-size: 560px;
+    margin-inline-start: calc(200px + clamp(24px, 4vw, 64px));
+  }
+  @media (max-width: 780px) {
+    .lead-form { margin-inline-start: 0; max-inline-size: none; }
+  }
+  .form { display: grid; gap: var(--s5); }
+  .field__name {
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3);
+    font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-block-end: var(--s2);
+  }
+  .field__opt { color: var(--ink-3); font-weight: 500; letter-spacing: 0.06em; }
+  .input, .textarea {
+    inline-size: 100%;
+    font-family: var(--f-text);
+    font-size: 1.0625rem;
+    padding: var(--s4);
+    background: var(--paper);
+    color: var(--ink);
+    border: var(--bold-rule) solid var(--ink);
+    border-radius: 0;
+    transition: box-shadow .15s var(--ease);
+  }
+  .textarea { resize: vertical; min-block-size: 96px; line-height: 1.5; }
+  .input::placeholder, .textarea::placeholder { color: var(--ink-3); }
+  .input:focus, .textarea:focus {
+    outline: none;
+    box-shadow: inset 0 -6px 0 var(--signal);
+  }
+  .hp { position: absolute; inset-inline-start: -9999px; inline-size: 1px; block-size: 1px; opacity: 0; }
+
+  .consent { display: flex; gap: var(--s3); align-items: flex-start; font-size: var(--t-sm); color: var(--ink-2); cursor: pointer; }
+  .consent input {
+    appearance: none;
+    inline-size: 20px; block-size: 20px; flex: none; margin: 1px 0 0;
+    border: var(--bold-rule) solid var(--ink);
+    background: var(--paper);
+    display: grid; place-items: center;
+    cursor: pointer;
+  }
+  .consent input::after {
+    content: ""; inline-size: 10px; block-size: 10px;
+    background: var(--signal); transform: scale(0);
+    transition: transform .12s var(--ease);
+  }
+  .consent input:checked::after { transform: scale(1); }
+
+  .note { font-family: var(--f-mono); font-size: var(--t-sm); letter-spacing: 0.02em; min-block-size: 1.5em; color: var(--ink-2); }
+  .note.is-error { color: var(--err); }
+  .note.is-ok { color: var(--ok); }
+
+  .escape { margin-block-start: var(--s5); padding-block-start: var(--s5); border-block-start: var(--hair) solid var(--rule); font-size: var(--t-sm); color: var(--ink-2); }
+  .escape a { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Подвал: инверсия полосы ---------- */
+  .colophon { background: var(--ink); color: var(--paper); }
+  .colophon__in {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s5);
+    padding-block: clamp(32px, 5vw, 64px);
+  }
+  .colophon__links { display: flex; flex-wrap: wrap; gap: var(--s5); }
+  .colophon a { text-decoration: none; }
+  .colophon a:hover { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px var(--paper); }
+
+  /* ---------- Липкая панель на мобильном ---------- */
+  .dock {
+    position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 60;
+    display: none; align-items: center; gap: var(--s4);
+    padding: var(--s3) var(--s4) calc(var(--s3) + env(safe-area-inset-bottom));
+    background: var(--ink); color: var(--paper);
+    border-block-start: var(--bold-rule) solid var(--paper);
+  }
+  .dock__t { min-inline-size: 0; }
+  .dock__t b { display: block; font-family: var(--f-display); font-weight: 700; font-size: 0.8125rem; letter-spacing: -0.02em; }
+  .dock__t span { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; opacity: .65; }
+  .dock .btn { margin-inline-start: auto; flex: none; }
+  @media (max-width: 760px) { .dock { display: flex; } body { padding-block-end: 76px; } }
+}
+
+@layer utilities {
+  .skip {
+    position: absolute; inset-inline-start: -9999px; inset-block-start: 0; z-index: 100;
+    background: var(--signal); color: var(--signal-ink);
+    padding: var(--s3) var(--s4); font-family: var(--f-mono); font-size: var(--t-sm);
+  }
+  .skip:focus { inset-inline-start: 0; }
+  .vh { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* ---------- Движение ----------
+     Один срежиссированный вход на загрузке и появление полос при
+     прокрутке — на нативной scroll-таймлинии, без JS и без
+     обработчиков скролла. Без поддержки всё просто видно сразу. */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { animation: rise .7s var(--ease) both; }
+    .rise-1 { animation-delay: .04s; }
+    .rise-2 { animation-delay: .12s; }
+    .rise-3 { animation-delay: .20s; }
+    .rise-4 { animation-delay: .28s; }
+    .rise-5 { animation-delay: .36s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @supports (animation-timeline: view()) {
+      .enter {
+        animation: rise .8s var(--ease) both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 42%;
+      }
+      .dock {
+        animation: dock-up .3s var(--ease) both;
+        animation-timeline: scroll();
+        animation-range: 60vh 86vh;
+      }
+      @keyframes dock-up {
+        from { transform: translateY(105%); }
+        to   { transform: none; }
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      animation-timeline: none !important;
+    }
+  }
+}
 </style>
 </head>
 <body>
 
-<div class="page">
+<a class="skip" href="#lead">К форме заявки</a>
 
-  <header class="masthead">
-    <span class="name">Сергей Морозов</span>
-    <a class="reach" href="https://t.me/poleartop">Telegram: @poleartop</a>
-  </header>
+<header class="masthead">
+  <div class="shell masthead__in">
+    <a class="sig" href="#top">
+      <span class="sig__mark" aria-hidden="true">СМ</span>
+      <span class="sig__name">СЕРГЕЙ МОРОЗОВ</span>
+    </a>
+    <div class="masthead__right">
+      <a class="mono masthead__meta" href="https://t.me/poleartop">TG / @POLEARTOP</a>
+    </div>
+  </div>
+</header>
 
+<main id="top">
+
+  <!-- ============================================================
+       ГЕРОЙ
+       Этажи плаката: метка → заголовок во всю полосу → две колонки →
+       шкала фактов. Заголовок не делит ширину ни с чем.
+       ============================================================ -->
   <section class="hero">
-    <h1>Одностраничный сайт, который объясняет ваше дело и собирает заявки</h1>
-    <p class="lede">Работаю один, поэтому отвечаю за всё сразу: текст, дизайн, вёрстку и запуск. Цену и срок называю до начала работы и дальше не меняю.</p>
+    <div class="shell">
 
-    <dl class="estimate">
-      <div class="row"><dt>Цена</dt><dd>от 10 000 ₽</dd></div>
-      <div class="row"><dt>Срок</dt><dd>5 рабочих дней</dd></div>
-      <div class="row"><dt>Правки после запуска</dt><dd>14 дней, бесплатно</dd></div>
-    </dl>
+      <div class="hero__top rise rise-1">
+        <p class="tag"><span class="tag__n">01</span> Одностраничные сайты для малого бизнеса</p>
+        <p class="mono hero__status" style="color: var(--ink-2)">
+          <span class="blip" aria-hidden="true"></span> Беру заказы · ответ за 2–3 часа
+        </p>
+      </div>
 
-    <a class="btn" href="#lead">Оставить заявку</a>
-  </section>
+      <h1 class="rise rise-2">Сайт под ключ за 7 дней</h1>
 
-  <section class="band">
-    <h2>Что входит</h2>
-    <div class="band-body">
-      <ul class="included">
-        <li><b>Структура страницы.</b> <span>Решаем, какие блоки нужны и в каком порядке их читает ваш клиент.</span></li>
-        <li><b>Текст.</b> <span>Формулирую простыми словами, что вы делаете и чем отличаетесь от соседей.</span></li>
-        <li><b>Дизайн под ваше дело.</b> <span>Рисую с нуля, а не подставляю ваш логотип в готовый шаблон.</span></li>
-        <li><b>Форма заявки.</b> <span>Заявка приходит вам в Telegram через секунду после отправки.</span></li>
-        <li><b>Публикация.</b> <span>Подключаю домен и хостинг — сайт открывается по вашему адресу.</span></li>
-      </ul>
-      <p class="aside">Не берусь за интернет-магазины, личные кабинеты и настройку рекламы. Если вам нужно именно это, скажу сразу на первом созвоне.</p>
+      <div class="hero__body">
+        <div class="hero__pitch rise rise-3">
+          <p class="deck" style="margin-block-start: 0">
+            Делаю одностраничные сайты для малого бизнеса.
+          </p>
+          <div class="hero__cta">
+            <a class="btn" href="#lead" data-goal="cta_hero">
+              Узнать цену <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <div class="scale">
+            <div class="scale__cell">
+              <p class="scale__v">5 000 ₽</p>
+              <p class="scale__k">Цена известна до начала работы</p>
+            </div>
+            <div class="scale__cell">
+              <p class="scale__v">7 дней</p>
+              <p class="scale__k">От разговора до открытого сайта</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Макет собран на CSS: ни одного изображения.
+             Он и есть образец работы. -->
+        <div class="stage rise rise-4">
+          <div class="frame" aria-hidden="true">
+            <div class="frame__bar">
+              <span class="frame__dots"><i></i><i></i><i></i></span>
+              <span class="frame__url">вашсайт.рф</span>
+            </div>
+            <div class="frame__screen">
+              <div class="fx-nav">
+                <span class="fx-logo"><i></i><span class="fx" style="inline-size:52px"></span></span>
+                <span class="fx-links"><span class="fx"></span><span class="fx"></span><span class="fx"></span></span>
+              </div>
+              <div class="fx-hero">
+                <span class="fx fx--ink" style="inline-size:94%"></span>
+                <span class="fx fx--ink" style="inline-size:58%"></span>
+                <span class="fx" style="inline-size:78%; margin-block-start:4px"></span>
+                <span class="fx" style="inline-size:66%"></span>
+                <span class="fx-cta"></span>
+              </div>
+              <div class="fx-cards">
+                <div class="fx-card"><i></i><span class="fx fx--mid" style="inline-size:76%"></span><span class="fx" style="inline-size:54%"></span></div>
+                <div class="fx-card"><i></i><span class="fx fx--mid" style="inline-size:68%"></span><span class="fx" style="inline-size:60%"></span></div>
+                <div class="fx-card"><i></i><span class="fx fx--mid" style="inline-size:80%"></span><span class="fx" style="inline-size:46%"></span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ping" role="img" aria-label="Уведомление в Telegram: новая заявка с сайта. Марина, шторы на заказ, телефон +7 913, одно непрочитанное сообщение">
+            <span class="ping__head" aria-hidden="true">
+              <span class="ping__ava">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.8 4.31 18.7 19a1.15 1.15 0 0 1-1.82.72l-4.7-3.46-2.26 2.18c-.25.25-.46.46-.95.46l.34-4.79 8.72-7.88c.38-.34-.08-.53-.59-.19L5.72 12.9 1 11.43c-1.03-.32-1.05-1.03.21-1.52l19.2-7.4c.85-.31 1.6.2 1.39 1.8z"/></svg>
+              </span>
+              <span class="ping__app">Telegram</span>
+              <span class="ping__time">сейчас</span>
+              <span class="ping__badge">1</span>
+            </span>
+            <span class="ping__body" aria-hidden="true">
+              <span class="ping__t">Новая заявка с сайта</span>
+              <span class="ping__s"><b>Марина</b> · шторы на заказ · +7 913 ••• 04</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </section>
 
-  <section class="band">
-    <h2>Как проходит работа</h2>
-    <div class="band-body">
-      <dl class="schedule">
-        <div class="step">
-          <dt>День 1</dt>
-          <dd>Созваниваемся на полчаса. Спрашиваю про клиентов, цены и то, что вас обычно спрашивают.</dd>
-        </div>
-        <div class="step">
-          <dt>День 2</dt>
-          <dd>Присылаю структуру страницы и текст. Вы читаете и говорите, где я не прав.</dd>
-        </div>
-        <div class="step">
-          <dt>Дни 3–4</dt>
-          <dd>Рисую дизайн и собираю страницу — на компьютере и на телефоне.</dd>
-        </div>
-        <div class="step">
-          <dt>День 5</dt>
-          <dd>Открываем сайт: подключаю домен и форму, проверяем заявку вместе.</dd>
-        </div>
-      </dl>
-    </div>
-  </section>
-
+  <!-- ============================================================
+       ФОРМА
+       Три поля, обязательны два. Каждое лишнее поле стоит заявок,
+       поэтому «чем занимаетесь» помечено необязательным. Рядом —
+       выход для тех, кто формы не любит принципиально.
+       ============================================================ -->
   <section class="band" id="lead">
-    <h2>Заявка</h2>
-    <div class="band-body">
-      <p class="band-lede">Оставьте контакты — отвечу сегодня, назову точную цену и срок для вашего дела.</p>
-      <form class="form" id="leadForm" novalidate>
-        <label class="field">
-          <span class="field-name">Как вас зовут</span>
-          <input type="text" id="leadName" name="name" autocomplete="name" placeholder="Сергей">
-        </label>
-        <label class="field">
-          <span class="field-name">Телефон или Telegram</span>
-          <input type="tel" id="leadContact" name="contact" autocomplete="tel" placeholder="+7 900 000-00-00 или @username">
-        </label>
-        <label class="consent">
-          <input type="checkbox" id="leadConsent">
-          <span>Согласен на обработку персональных данных</span>
-        </label>
-        <button type="submit" class="btn">Отправить заявку</button>
-        <p class="note" id="leadNote" role="status" aria-live="polite"></p>
-      </form>
+    <div class="shell band__in">
+      <div class="shead">
+        <p class="tag shead__tag"><span class="tag__n">02</span> Расчёт</p>
+        <div class="shead__body">
+          <h2 class="h2">Расскажите про своё дело</h2>
+          <p class="deck">Напишу, сколько будет стоить и сколько займёт времени.</p>
+        </div>
+      </div>
+
+      <div class="lead-form enter">
+          <form class="form" id="leadForm" novalidate>
+            <div>
+              <label class="field__name" for="leadName">Как вас зовут</label>
+              <input class="input" type="text" id="leadName" name="name" autocomplete="name" placeholder="Сергей" required>
+            </div>
+
+            <div>
+              <label class="field__name" for="leadContact">Телефон или Telegram</label>
+              <input class="input" type="tel" id="leadContact" name="contact" autocomplete="tel" placeholder="+7 900 000-00-00 или @username" required>
+            </div>
+
+            <div>
+              <label class="field__name" for="leadAbout">
+                Чем занимаетесь <span class="field__opt">необязательно</span>
+              </label>
+              <textarea class="textarea" id="leadAbout" name="about" placeholder="Шью шторы на заказ, беру клиентов из соцсетей, хочу страницу с ценами и примерами"></textarea>
+            </div>
+
+            <!-- Ловушка для ботов: люди этого поля не видят и не заполняют. -->
+            <input class="hp" type="text" id="leadCompany" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <label class="consent">
+              <input type="checkbox" id="leadConsent">
+              <span>Согласен на обработку персональных данных. Контакты нужны только для ответа — в рассылки не попадут.</span>
+            </label>
+
+            <button type="submit" class="btn btn--wide" data-goal="cta_form">
+              Отправить заявку <span class="btn__arrow" aria-hidden="true">→</span>
+            </button>
+
+            <p class="note" id="leadNote" role="status" aria-live="polite"></p>
+          </form>
+
+          <p class="escape">
+            Не любите формы — напишите прямо в Telegram: <a href="https://t.me/poleartop">@poleartop</a>
+            или на почту <a href="mailto:plrtp@mail.ru">plrtp@mail.ru</a>
+          </p>
+      </div>
     </div>
   </section>
 
-  <footer>
-    <span>Сергей Морозов, дизайн и разработка сайтов</span>
-    <span class="links">
-      <a href="mailto:plrtp@mail.ru">plrtp@mail.ru</a>
-      <a href="https://t.me/poleartop">t.me/poleartop</a>
-    </span>
-  </footer>
+  <!-- ============================================================
+       ВОПРОСЫ
+       Нативный <details>: работает без JavaScript, доступен с
+       клавиатуры, индексируется поисковиком.
+       ============================================================ -->
+  <section class="band" id="faq">
+    <div class="shell band__in">
+      <div class="shead">
+        <p class="tag shead__tag"><span class="tag__n">03</span> Вопросы</p>
+        <div class="shead__body">
+          <h2 class="h2">Часто задаваемые вопросы</h2>
+        </div>
+      </div>
 
+      <div class="qa">
+
+        <details class="enter">
+          <summary>
+            <span class="qa__n">Q1</span>
+            <span class="qa__q">Будут ли с сайта клиенты?</span>
+            <span class="qa__pm" aria-hidden="true">+</span>
+          </summary>
+          <div class="qa__a">
+            <p>Сам по себе сайт людей не приводит. Он превращает в заявки тех, кто вас уже нашёл: по рекомендации, в справочнике, на карте, в соцсетях. Если к вам сейчас вообще никто не приходит, сайт эту проблему не решит.</p>
+          </div>
+        </details>
+
+        <details class="enter">
+          <summary>
+            <span class="qa__n">Q2</span>
+            <span class="qa__q">Почему так дёшево? В чём подвох?</span>
+            <span class="qa__pm" aria-hidden="true">+</span>
+          </summary>
+          <div class="qa__a">
+            <p>Подвоха нет, есть структура расходов. В агентстве вашу задачу ведут менеджер, дизайнер, верстальщик и руководитель — и все четыре зарплаты лежат в счёте. У меня нет ни офиса, ни этих людей.</p>
+          </div>
+        </details>
+
+        <details class="enter">
+          <summary>
+            <span class="qa__n">Q3</span>
+            <span class="qa__q">У меня нет ни текста, ни нормальных фотографий</span>
+            <span class="qa__pm" aria-hidden="true">+</span>
+          </summary>
+          <div class="qa__a">
+            <p>Текст — это моя работа, а не ваша. Вы просто отвечаете на вопросы в разговоре, остальное я формулирую сам.</p>
+            <p>С фотографиями помогу: пришлю короткий список, что и как снять на телефон, чтобы выглядело прилично. Если снимать нечего совсем — соберу страницу так, что фотографии ей и не понадобятся.</p>
+          </div>
+        </details>
+
+        <details class="enter">
+          <summary>
+            <span class="qa__n">Q4</span>
+            <span class="qa__q">Чего вы не делаете?</span>
+            <span class="qa__pm" aria-hidden="true">+</span>
+          </summary>
+          <div class="qa__a">
+            <p>Интернет-магазинов с корзиной и онлайн-оплатой, личных кабинетов, мобильных приложений, настройки и ведения рекламы, SEO-продвижения.</p>
+          </div>
+        </details>
+
+        <details class="enter">
+          <summary>
+            <span class="qa__n">Q5</span>
+            <span class="qa__q">Сколько стоит содержание сайта?</span>
+            <span class="qa__pm" aria-hidden="true">+</span>
+          </summary>
+          <div class="qa__a">
+            <p>Домен — 200–300 ₽ в год, хостинг — 150–200 ₽ в месяц, напрямую провайдеру. Абонентской платы мне нет.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="colophon">
+  <div class="shell colophon__in">
+    <p class="mono">Сергей Морозов · сайты для малого бизнеса</p>
+    <p class="mono colophon__links">
+      <a href="mailto:plrtp@mail.ru">PLRTP@MAIL.RU</a>
+      <a href="https://t.me/poleartop">T.ME/POLEARTOP</a>
+      <a href="#lead">ОСТАВИТЬ КОНТАКТЫ</a>
+    </p>
+  </div>
+</footer>
+
+<div class="dock">
+  <span class="dock__t">
+    <b>5 000 ₽ · 7 дней</b>
+    <span>Расчёт бесплатный</span>
+  </span>
+  <a class="btn btn--sm" href="#lead" data-goal="cta_dock">
+    Узнать цену <span class="btn__arrow" aria-hidden="true">→</span>
+  </a>
 </div>
 
 <script>
 (function () {
+  'use strict';
+
+  var METRIKA_ID = 112856913;
+  function goal(name) {
+    if (typeof window.ym === 'function') {
+      try { window.ym(METRIKA_ID, 'reachGoal', name); } catch (e) {}
+    }
+  }
+
+  /* Цели на каждую кнопку: через неделю видно, какая из них
+     действительно приносит заявки. */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-goal]');
+    if (el) goal(el.getAttribute('data-goal'));
+  });
+
+  /* Аккордеон: открытый вопрос меняет «+» на «−». */
+  document.querySelectorAll('.qa details').forEach(function (d) {
+    var pm = d.querySelector('.qa__pm');
+    d.addEventListener('toggle', function () { pm.textContent = d.open ? '−' : '+'; });
+  });
+
   var form = document.getElementById('leadForm');
   var note = document.getElementById('leadNote');
   if (!form || !note) return;
 
-  // Адрес API-сервера, который пересылает заявки в Telegram.
   var LEAD_API_URL = 'https://plrtp.ru/api/lead';
 
-  function say(text, isError) {
+  function say(text, state) {
     note.textContent = text;
-    note.classList.toggle('is-error', !!isError);
+    note.classList.toggle('is-error', state === 'error');
+    note.classList.toggle('is-ok', state === 'ok');
   }
 
   form.addEventListener('submit', function (e) {
@@ -425,38 +950,50 @@
 
     var nameField = document.getElementById('leadName');
     var contactField = document.getElementById('leadContact');
-    var name = nameField.value.trim();
-    var contact = contactField.value.trim();
+    var aboutField = document.getElementById('leadAbout');
+    var honeypot = document.getElementById('leadCompany');
     var submitBtn = form.querySelector('button[type="submit"]');
 
-    if (!name) { say('Напишите, как к вам обращаться.', true); nameField.focus(); return; }
-    if (!contact) { say('Оставьте телефон или Telegram, чтобы я мог ответить.', true); contactField.focus(); return; }
-    if (!document.getElementById('leadConsent').checked) {
-      say('Отметьте согласие на обработку персональных данных.', true);
+    var name = nameField.value.trim();
+    var contact = contactField.value.trim();
+    var about = aboutField.value.trim();
+
+    /* Бот заполнил скрытое поле — показываем успех и ничего не шлём. */
+    if (honeypot && honeypot.value) {
+      form.reset();
+      say('Заявка отправлена. Отвечу сегодня.', 'ok');
       return;
     }
 
-    say('Отправляю…', false);
+    if (!name) { say('Напишите, как к вам обращаться.', 'error'); nameField.focus(); return; }
+    if (!contact) { say('Оставьте телефон или Telegram — иначе мне некуда ответить.', 'error'); contactField.focus(); return; }
+    if (!document.getElementById('leadConsent').checked) {
+      say('Отметьте согласие на обработку данных — без него не могу отправить.', 'error');
+      return;
+    }
+
+    say('Отправляю…', null);
     submitBtn.disabled = true;
 
     fetch(LEAD_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, contact: contact })
+      body: JSON.stringify({ name: name, contact: contact, about: about })
     })
       .then(function (res) { return res.json(); })
       .then(function (data) {
         submitBtn.disabled = false;
         if (data && data.ok) {
           form.reset();
-          say('Заявка отправлена. Отвечу сегодня.', false);
+          say('Готово. Заявка у меня в телефоне — отвечу сегодня.', 'ok');
+          goal('lead_sent');
         } else {
-          say('Заявка не ушла. Попробуйте ещё раз или напишите в Telegram: @poleartop', true);
+          say('Заявка не ушла. Попробуйте ещё раз или напишите в Telegram: @poleartop', 'error');
         }
       })
       .catch(function () {
         submitBtn.disabled = false;
-        say('Заявка не ушла. Попробуйте ещё раз или напишите в Telegram: @poleartop', true);
+        say('Заявка не ушла. Попробуйте ещё раз или напишите в Telegram: @poleartop', 'error');
       });
   });
 })();

@@ -38,7 +38,7 @@ app.post('/api/lead', async (req, res) => {
     return res.status(429).json({ ok: false, error: 'Too many requests' });
   }
 
-  const { name, contact } = req.body || {};
+  const { name, contact, about } = req.body || {};
 
   if (!name || !contact || typeof name !== 'string' || typeof contact !== 'string') {
     return res.status(400).json({ ok: false, error: 'name and contact are required' });
@@ -47,10 +47,15 @@ app.post('/api/lead', async (req, res) => {
     return res.status(400).json({ ok: false, error: 'Input too long' });
   }
 
+  // Свободное поле «чем занимаетесь» — необязательное, но самое полезное:
+  // по нему сразу видно, моя это задача или нет.
+  const aboutText = typeof about === 'string' ? about.trim().slice(0, 1000) : '';
+
   const text =
     'Заявка с лендинга\n' +
     'Имя: ' + name.trim() + '\n' +
-    'Контакт: ' + contact.trim();
+    'Контакт: ' + contact.trim() +
+    (aboutText ? '\nДело: ' + aboutText : '');
 
   try {
     const tgRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
