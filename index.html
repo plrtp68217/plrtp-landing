@@ -51,8 +51,7 @@
     --c-ink-200:  #D8D8D6;
     --c-paper-0:  #FFFFFF;
     --c-paper-50: #F1F1EF;
-    --c-green:      #00A651;   /* плашка: чёрный текст на ней 6.2:1 */
-    --c-green-deep: #007A3A;   /* текстом на бумаге 5.5:1 */
+    --c-green:      #008540;   /* белый текст на ней 4.74:1; она же текстом на бумаге 4.74:1 */
     --c-red-700:  #C21F14;
     /* Цитата фирменных цветов Telegram — не палитра страницы.
        Градиент годится под глиф логотипа (декоративный), но белый
@@ -70,9 +69,9 @@
     --rule:         var(--c-ink-200);
     --rule-strong:  var(--c-ink-950);
     --signal:       var(--c-green);
-    --signal-ink:   var(--c-ink-950);
+    --signal-ink:   var(--c-paper-0);
     --err:          var(--c-red-700);
-    --ok:           var(--c-green-deep);
+    --ok:           var(--c-green);
     --live:         var(--c-green);
 
     /* Гарнитуры */
@@ -216,8 +215,11 @@
     --btn-fg: var(--signal-ink);
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--s5);
+    /* Было space-between: подпись у левого края, стрелка у правого.
+       С короткой подписью и кнопкой во всю ширину между ними
+       оставалась дыра. Держим их вместе по центру. */
+    justify-content: center;
+    gap: var(--s3);
     inline-size: fit-content;
     min-block-size: 56px;
     padding: var(--s4) var(--s5);
@@ -288,6 +290,12 @@
     padding-block: var(--s5);
   }
   .hero__status { display: inline-flex; align-items: center; gap: var(--s2); }
+  @media (max-width: 620px) {
+    .hero__top { display: block; padding-block: var(--s4) var(--s3); }
+    .hero__top .tag { display: block; }
+    .hero__top .tag__n { margin-inline-end: 6px; }
+    .hero__status { display: flex; margin-block-start: var(--s3); }
+  }
   .blip {
     inline-size: 9px; block-size: 9px; flex: none;
     background: var(--live);
@@ -573,20 +581,6 @@
   .colophon__links { display: flex; flex-wrap: wrap; gap: var(--s5); }
   .colophon a { text-decoration: none; }
   .colophon a:hover { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px var(--paper); }
-
-  /* ---------- Липкая панель на мобильном ---------- */
-  .dock {
-    position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 60;
-    display: none; align-items: center; gap: var(--s4);
-    padding: var(--s3) var(--s4) calc(var(--s3) + env(safe-area-inset-bottom));
-    background: var(--ink); color: var(--paper);
-    border-block-start: var(--bold-rule) solid var(--paper);
-  }
-  .dock__t { min-inline-size: 0; }
-  .dock__t b { display: block; font-family: var(--f-display); font-weight: 700; font-size: 0.8125rem; letter-spacing: -0.02em; }
-  .dock__t span { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; opacity: .65; }
-  .dock .btn { margin-inline-start: auto; flex: none; }
-  @media (max-width: 760px) { .dock { display: flex; } body { padding-block-end: 76px; } }
 }
 
 @layer utilities {
@@ -620,15 +614,6 @@
         animation: rise .8s var(--ease) both;
         animation-timeline: view();
         animation-range: entry 0% entry 42%;
-      }
-      .dock {
-        animation: dock-up .3s var(--ease) both;
-        animation-timeline: scroll();
-        animation-range: 60vh 86vh;
-      }
-      @keyframes dock-up {
-        from { transform: translateY(105%); }
-        to   { transform: none; }
       }
     }
   }
@@ -898,16 +883,6 @@
     </p>
   </div>
 </footer>
-
-<div class="dock">
-  <span class="dock__t">
-    <b>5 000 ₽ · 7 дней</b>
-    <span>Расчёт бесплатный</span>
-  </span>
-  <a class="btn btn--sm" href="#lead" data-goal="cta_dock">
-    Узнать цену <span class="btn__arrow" aria-hidden="true">→</span>
-  </a>
-</div>
 
 <script>
 (function () {
