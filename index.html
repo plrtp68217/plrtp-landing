@@ -3,13 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сергей Морозов — сайты для малого бизнеса за 7 дней</title>
-<meta name="description" content="Одностраничный сайт для малого бизнеса: 5 000 ₽, семь дней, заявки приходят в Telegram.">
+<title>Сайт под ключ за 7 дней</title>
+<meta name="description" content="Делаю одностраничные сайты для малого бизнеса. 5 000 ₽, 7 дней, заявки приходят в Telegram.">
 <meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Сайт под ключ за 7 дней">
-<meta property="og:description" content="Одностраничные сайты для мастеров, студий, ремонта и доставки. 5 000 ₽, 7 дней, заявки — сразу в Telegram.">
+<meta property="og:description" content="Делаю одностраничные сайты для малого бизнеса. 5 000 ₽, 7 дней, заявки приходят в Telegram.">
 <meta property="og:url" content="https://plrtp.ru/">
+<meta property="og:site_name" content="Сергей Морозов">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Сайт под ключ за 7 дней">
+<meta name="twitter:description" content="Делаю одностраничные сайты для малого бизнеса. 5 000 ₽, 7 дней, заявки приходят в Telegram.">
 <link rel="canonical" href="https://plrtp.ru/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -395,6 +400,38 @@
   .fx-card { border: 1.5px solid var(--ink); padding: 10px; display: grid; gap: 6px; }
   .fx-card i { inline-size: 12px; block-size: 12px; background: var(--ink); display: block; }
 
+  /* Сборка макета на загрузке. Полосы «прочерчиваются» слева, потом
+     встаёт кнопка, потом карточки — и только после этого прилетает
+     заявка. Первый экран проигрывает то же, что говорит заголовок,
+     поэтому это не декор, а тот же довод другими средствами. */
+  @media (prefers-reduced-motion: no-preference) {
+    .frame__screen .fx { transform-origin: left center; animation: draw .34s var(--ease) both; }
+    .fx-logo i, .fx-card i   { animation: pop .3s var(--ease) both; }
+    .fx-cta                  { animation: lift .34s var(--ease) both; }
+    .fx-card                 { animation: lift .36s var(--ease) both; }
+    /* Полосы внутри карточек не чертим отдельно — карточка уже едет
+       целиком, двойное движение читалось бы как дребезг. */
+    .fx-card .fx             { animation: none; }
+
+    .fx-logo i                 { animation-delay: .45s; }
+    .fx-logo .fx               { animation-delay: .48s; }
+    .fx-links .fx:nth-child(1) { animation-delay: .51s; }
+    .fx-links .fx:nth-child(2) { animation-delay: .54s; }
+    .fx-links .fx:nth-child(3) { animation-delay: .57s; }
+    .fx-hero  .fx:nth-child(1) { animation-delay: .63s; }
+    .fx-hero  .fx:nth-child(2) { animation-delay: .68s; }
+    .fx-hero  .fx:nth-child(3) { animation-delay: .73s; }
+    .fx-hero  .fx:nth-child(4) { animation-delay: .78s; }
+    .fx-cta                    { animation-delay: .86s; }
+    .fx-card:nth-child(1)      { animation-delay: .94s; }
+    .fx-card:nth-child(2)      { animation-delay: .99s; }
+    .fx-card:nth-child(3)      { animation-delay: 1.04s; }
+
+    @keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes pop  { from { opacity: 0; transform: scale(.35); } to { opacity: 1; transform: none; } }
+    @keyframes lift { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  }
+
   /* ---------- Уведомление о заявке ----------
      Единственный объект на странице, который цитирует чужой
      интерфейс, и цитирует честно: кружок аватара, фирменный синий,
@@ -448,8 +485,8 @@
   @media (prefers-reduced-motion: no-preference) {
     /* Заявка прилетает, а не оказывается нарисованной: карточка
        приезжает справа, следом «падает» счётчик непрочитанного. */
-    .ping { animation: ping-in .5s var(--ease) 1.1s both; }
-    .ping__badge { animation: badge-pop .32s var(--ease) 1.5s both; }
+    .ping { animation: ping-in .5s var(--ease) 1.4s both; }
+    .ping__badge { animation: badge-pop .32s var(--ease) 1.78s both; }
     @keyframes ping-in {
       from { opacity: 0; transform: translate(26px, 10px); }
       to   { opacity: 1; transform: none; }
@@ -473,6 +510,21 @@
 
   /* ---------- Вопросы ---------- */
   .qa { max-inline-size: 760px; border-block-start: var(--hair) solid var(--rule); }
+  /* <details> раскрывается рывком: высоту к auto анимировать нельзя.
+     interpolate-size это снимает. Где не поддерживается — остаётся
+     прежнее мгновенное раскрытие, ничего не ломается. */
+  @supports (interpolate-size: allow-keywords) {
+    @media (prefers-reduced-motion: no-preference) {
+      :root { interpolate-size: allow-keywords; }
+      .qa details::details-content {
+        block-size: 0;
+        overflow: hidden;
+        transition: block-size .3s var(--ease), content-visibility .3s var(--ease);
+        transition-behavior: allow-discrete;
+      }
+      .qa details[open]::details-content { block-size: auto; }
+    }
+  }
   .qa details { border-block-end: var(--hair) solid var(--rule); }
   .qa summary {
     display: grid;
